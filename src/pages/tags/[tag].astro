@@ -1,0 +1,26 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const recipes = await getCollection("recipes");
+  const uniqueTags = [...new Set(recipes.map((recipe: any) => recipe.data.tags).flat())];
+
+  return uniqueTags.map((tag) => {
+    const tagRecipes = recipes.filter((recipe: any) => recipe.data.tags.includes(tag));
+    return {
+      params: { tag },
+      props: { recipes: tagRecipes },
+    };
+  });
+}
+
+const { tag } = Astro.params;
+const { recipes } = Astro.props;
+---
+<BaseLayout pageTitle={tag}>
+  <p>Recipes tagged with {tag}</p>
+  <ul>
+    { recipes.map((recipe) => <li><a href={`/recipes/${recipe.id}/`}>{recipe.data.title}</a></li>) }
+  </ul>
+</BaseLayout>
