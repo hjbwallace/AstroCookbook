@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const recipes = await getCollection("recipes");
+const pageTitle = "Search"
+---
+<BaseLayout pageTitle={pageTitle}>
+
+  <form method="GET">
+    <label>
+      Search Term:
+      <input type="text" name="q" />
+    </label>
+    <button>Submit</button>
+  </form>
+
+  <p>Searching for recipes: <span id="search-term"></span></p>
+  <ul id="recipe-list">
+    { recipes.map((recipe) => <li id={recipe.id} style="display: none;"><a href={`/recipes/${recipe.id}/`}>{recipe.data.title}</a></li>) }
+  </ul>
+
+</BaseLayout>
+
+<script>
+    filterRecipes();
+
+    function filterRecipes() {
+      const params = new URLSearchParams(window.location.search);
+      const query = params.get("q")?.toLowerCase() || "";
+      const list = document.getElementById("recipe-list");
+      const term = document.getElementById("search-term");
+
+      if (!list || !term)
+        return;
+
+      term.textContent = query;
+
+      Array.from(list.children).forEach(li => {
+        const liElement = li as HTMLElement;
+        const recipeTitle = liElement.textContent?.toLowerCase() ?? "";
+        console.log(recipeTitle);
+
+        if (query == null || query == "" || recipeTitle.includes(query)) {
+          liElement.style.display = "";
+        }
+      });
+    }
+</script>
