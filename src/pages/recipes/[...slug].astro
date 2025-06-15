@@ -1,18 +1,99 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getRecipes } from '../../components/RecipeProvider';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
-  const recipes = await getCollection("recipes");
+  const recipes = await getRecipes();
   return recipes.map(recipe => ({
-    params: { slug: recipe.id }, props: { recipe: recipe },
+    params: { slug: recipe.id }, 
+    props: { recipe: recipe },
   }));
 }
 
 const { recipe } = Astro.props;
-const { Content } = await render(recipe);
 ---
 
-<BaseLayout frontmatter={recipe.data}>
-  <Content />
+<BaseLayout pageTitle={recipe.data.title}>
+  <p>{recipe.data.description}</p>
+
+  <section id="metadata">
+    {recipe.data.details && (
+      <ul class="details">
+        {recipe.data.details.servings && (<li>{recipe.data.details.servings} servings</li>)}
+        {recipe.data.details.time && (<li>{recipe.data.details.time} minutes</li>)}
+        {recipe.data.details.preheatTemperature && (<li>{recipe.data.details.preheatTemperature}C</li>)}
+      </ul>
+    )}
+    {recipe.data.tags && recipe.data.tags.length > 0 && (
+      <ul class="tags">
+        {recipe.data.tags.map(tag => (
+          <li><a href={`/tags/${tag}`}>{tag}</a></li>
+        ))}
+      </ul>
+    )}
+  </div>
+
+  <section id="ingredients">
+    <h2>Ingredients</h2>
+    {recipe.data.ingredients && recipe.data.ingredients.length > 0 && (
+      <ul>
+        {recipe.data.ingredients.map(ingredient => (
+          <li>{ingredient}</li>
+        ))}
+      </ul>
+    )}
+
+    {recipe.data.subRecipes && recipe.data.subRecipes
+      .filter(subRecipe => subRecipe && subRecipe.ingredients && subRecipe.ingredients.length > 0)
+      .map(subRecipe => (
+        <h3>{subRecipe.title}</h3>
+        <ul>
+          {subRecipe.ingredients!.map(subIngredient => (
+            <li>{subIngredient}</li>
+          ))}
+        </ul>
+      ))}
+  </section>
+
+  <section id="steps">
+    <h2>Steps</h2>
+    {recipe.data.steps && recipe.data.steps.length > 0 && (
+      <ul>
+        {recipe.data.steps.map(step => (
+          <li>{step}</li>
+        ))}
+      </ul>
+    )}
+
+    {recipe.data.subRecipes && recipe.data.subRecipes
+      .filter(subRecipe => subRecipe && subRecipe.steps && subRecipe.steps.length > 0)
+      .map(subRecipe => (
+        <h3>{subRecipe.title}</h3>
+        <ul>
+          {subRecipe.steps!.map(subStep => (
+            <li>{subStep}</li>
+          ))}
+        </ul>
+      ))}
+  </section>
+
+  {recipe.data.notes && recipe.data.notes.length > 0 && (
+    <section id="notes">
+      <h2>Notes</h2>
+      {recipe.data.notes.map(note => (
+        <p>{note}</p>
+      ))}
+    </section>
+  )}
+
+  {recipe.data.variations && recipe.data.variations.length > 0 && (
+    <section id="variations">
+      <h2>Variations</h2>
+        {recipe.data.variations.map(variation => (
+          <h3>{variation.title}</h3>
+          <p>{variation.description}</p>
+        ))}
+    </section>
+  )}
+
 </BaseLayout>

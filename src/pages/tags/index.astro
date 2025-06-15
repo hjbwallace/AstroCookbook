@@ -1,14 +1,14 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection } from "astro:content";
+import { getRecipes } from "../../components/RecipeProvider"
 
-const recipes = await getCollection("recipes");
-const tags = [...new Set(recipes.map((recipe: any) => recipe.data.tags).flat())];
+const recipes = await getRecipes();
+const tags = [...new Set(recipes.flatMap(recipe => recipe.data.tags))].sort();
 const pageTitle = "Tags";
 ---
 <BaseLayout pageTitle={pageTitle}>
   <ul>
-    {tags.map((tag) => (
+    {tags.map(tag => (
       <li><a href={`/tags/${tag}`}>{tag}</a></li>
     ))}
   </ul>
