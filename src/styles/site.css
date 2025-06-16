@@ -7,12 +7,27 @@ html {
   font-family: 'Inter Variable', sans-serif;
 }
 
+html, body {
+  height: 100%;
+}
+
+main {
+  flex: 1;
+}
+
 body {
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  line-height: 1.5;
+  margin: 0;
+}
+
+main, nav, footer {
   width: 100%;
   max-width: 80ch;
   padding: 1rem;
-  line-height: 1.5;
+  margin: 0 auto;
 }
 
 * {

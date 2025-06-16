@@ -2,11 +2,45 @@
 
 ---
 
+<style>
+  header {
+    background: #fff;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li:first-child {
+    margin-right: auto;
+  }
+
+  li:not(:first-child) {
+    margin-left: 1.5rem;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #222;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+</style>
+
 <header>
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/recipes">Recipes</a></li>
-    <li><a href="/tags">Tags</a></li>
-    <li><a href="/search">Search</a></li>
-  </ul>
+  <nav>
+    <ul>
+      <li><a href="/">Astro Cookbook</a></li>
+      <li><a href="/recipes">Recipes</a></li>
+      <li><a href="/tags">Tags</a></li>
+      <li><a href="/search">Search</a></li>
+    </ul>
+  </nav>
 </header>
